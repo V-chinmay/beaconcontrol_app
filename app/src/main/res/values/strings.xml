@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Beacon Controller</string>
+    <string name="connectionreq">Connect To network</string>
+    <string name="search_for_devices">Search For Devices</string>
+    <string name="connected">Connected</string>
+    <string name="searching_devices">Searching Devices!!</string>
+    <string name="beacon_no">Beacon Address:</string>
+    <string name="sleep">Sleep</string>
+    <string name="wake">Wake</string>
+    <string name="reset">Reset</string>
+    <string name="battery_status">Battery status</string>
+    <array name="beacons">
+        <item>
+            "1"
+        </item>
+        <item>
+            "2"
+        </item>
+        <item>
+            "3"
+        </item>
+        <item>
+            "4"
+        </item>
+
+    </array>
+
+</resources>

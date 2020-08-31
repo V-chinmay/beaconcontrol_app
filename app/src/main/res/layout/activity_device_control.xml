@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    android:columnCount="3"
+    android:rowCount="3"
+    tools:context=".DeviceControl">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/beacon_no"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:textColor="@color/white"
+        android:textSize="22dp"
+        />
+
+    <TextView
+        android:id="@+id/beaconstate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22dp"
+        android:textColor="@color/white"
+        android:layout_column="2"
+        android:layout_row="0"
+
+        />
+
+
+    <Spinner
+        android:id="@+id/beaconslist"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/beacons"
+        android:layout_column="1"
+        android:layout_row="0"
+
+        android:backgroundTint="@color/white"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:textSize="22dp"
+        android:layout_gravity="bottom"
+        android:text="@string/battery_status"
+        android:textColor="@color/white"
+
+    />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="1"
+        android:textSize="22dp"
+        android:layout_gravity="bottom"
+        android:textColor="@color/white"
+        android:text="hello"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="2"
+        android:layout_row="1"
+
+        android:orientation="vertical"
+        android:layout_gravity="right"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wake"
+                android:textSize="22dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                />
+            <Switch
+                android:id="@+id/wakebutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:trackTint="@color/white"
+                android:backgroundTint="@color/white"
+
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sleep"
+                android:textSize="22dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                />
+            <Switch
+                android:id="@+id/sleepbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:trackTint="@color/white"
+                android:backgroundTint="@color/white"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reset"
+                android:textSize="22dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                />
+
+            <Switch
+                android:id="@+id/resetbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:trackTint="@color/white"
+                android:backgroundTint="@color/white"
+
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</GridLayout>

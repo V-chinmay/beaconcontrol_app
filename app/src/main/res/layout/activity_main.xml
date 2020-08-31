@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    tools:context=".MainActivity">
+
+    <ToggleButton
+        android:id="@+id/connectreq"
+        android:layout_width="300sp"
+        android:layout_height="60sp"
+        android:textOff="@string/connectionreq"
+        android:textOn="@string/connected"
+        android:background="@drawable/roundedfail"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:fadingEdge="horizontal"
+        android:textSize="20sp"
+        android:onClick="onClickConnectSocket"
+        android:layout_centerInParent="true"
+
+        />
+
+    <Button
+        android:id="@+id/searchdevices"
+        android:layout_width="300sp"
+        android:layout_height="60sp"
+        android:text="@string/search_for_devices"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/connectreq"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:padding="10dp"
+        android:background="@drawable/roundedfail"
+        android:onClick="onClickDevSearch"
+        />
+
+
+
+
+
+
+
+</RelativeLayout>
