@@ -15,8 +15,8 @@ import java.net.Socket;
 
 public class SearchDevices extends AppCompatActivity {
 
-    Toast toast = null;
-    Intent home = null;
+    public  static Toast toast = null;
+    public static Intent home = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class SearchDevices extends AppCompatActivity {
 
     }
 
-    public  void returnHome()
+    public void returnHome()
     {
         home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(home);
@@ -89,7 +89,7 @@ public class SearchDevices extends AppCompatActivity {
         final Thread sendcommand = new Thread(new Runnable() {
             @Override
             public void run() {
-                response[0] =sendCommand("DEVLIST");
+                response[0] =sendCommand(getString(R.string.DEVLISTCOMMAND));
                 if(response[0]!=null)
                 {
                     Log.i("SearchDevices","Received response is "+response[0]);

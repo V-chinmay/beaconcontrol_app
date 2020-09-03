@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     static PrintWriter clientout=null;
     static BufferedReader clientin = null;
-    private String ipaddress = "192.168.0.18" ;
-    private int port = 1500;
+    public static String ipaddress = "192.168.29.10" ;
+    public static  int port = 3000;
 
 
     static Socket client = null;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void startIO()
+    public static void startIO()
     {
         try {
             clientout = new PrintWriter(client.getOutputStream(),true);
@@ -71,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+
     public void onClickConnectSocket(View view) {
 
         Thread botcon = new Thread(new Runnable() {
@@ -79,6 +82,15 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     if(connectreq.isChecked()) {
                         client = new Socket(ipaddress, port);
+                        if(client==null)
+                        {
+                            failflag=true;
+                            connectreq.setChecked(false);
+                            connectreq.setBackground(getResources().getDrawable(R.drawable.roundedfail));
+                            search.setEnabled(false);
+                            search.setBackground(getResources().getDrawable(R.drawable.roundedfail));
+                            Log.i("Socket","Failed to connect to the server");
+                        }
                         Log.i("Socket", "connected to network");
                         connectreq.setBackground(getResources().getDrawable(R.drawable.roundedsuccess));
                         startIO();

@@ -9,6 +9,17 @@
     <string name="wake">Wake</string>
     <string name="reset">Reset</string>
     <string name="battery_status">Battery status</string>
+    <string name="hedgehog_address">Hedgehog address</string>
+    <string name="temperature">Temperature</string>
+    <string name="beacon_status">Beacon Status</string>
+    <string name="n_a">n/a</string>
+    <string name="beacon_state">Beacon State</string>
+    <string name="DEVLISTCOMMAND">DEVLIST</string>
+    <string name="SLEEPCOMMAND">SLEEP-</string>
+    <string name="RESETCOMMAND">RESET-</string>
+    <string name="WAKECOMMAND">WAKE-</string>
+    <string name="DEVLISTPATTERN">((\\d\\d|\\d|\\d\\d\\d)-\\d,)+(\\D\\D\\D-\\d)+</string>
+    <string name="STATUSCOMMAND">STATUS-</string>
     <array name="beacons">
         <item>
             "1"
