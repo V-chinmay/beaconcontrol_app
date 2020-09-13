@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                     String[] ip_segs;
                     String loc_ip =getLocalIpAddress();
+
                     ip_segs=(getLocalIpAddress().split("\\."));
                     ip_segs[3]="200";
                     ipaddress=String.join(".",ip_segs);

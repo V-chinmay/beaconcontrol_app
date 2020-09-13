@@ -13,6 +13,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import static com.baseit.beaconcontroller.MainActivity.client;
+
 public class SearchDevices extends AppCompatActivity {
 
     public  static Toast toast = null;
@@ -22,6 +24,8 @@ public class SearchDevices extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_devices);
+        home= new Intent(this,MainActivity.class);
+
         Log.i("oncreate", "entered second activity ");
 
     }
@@ -34,72 +38,77 @@ public class SearchDevices extends AppCompatActivity {
         toast.show();
     }
 
-    public  String sendCommand(String command)
-    {
-        final String[] response = new String[1];
-        final PrintWriter finalClientout = MainActivity.clientout;
-        if(MainActivity.client!=null)
-        {
-            try {
-                finalClientout.println(command);
-                Log.i("Socket","Sent command::" + command);
-                response[0] = MainActivity.clientin.readLine();
-                toast.setText(response[0]);
-                toast.show();
-
-                if(response[0]==null)
-                {
-                    Log.e("error", "run: connection closed by server!!!");
-                    returnHome();
-                    return(null);
-                }
-                else
-                    {
-                    return((String)response[0]);
-                }
-
-            } catch (IOException e) {
-                Log.e("Socket","failed to recv/send input");
-                e.printStackTrace();
-                returnHome();
-                return(null);
-            }
-
-        }
-        return(null);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
-        searchDevices();
-    }
-
-    private void searchDevices()
-    {
-        final String[] response = new String[1];
-        Log.i("Socket","will start devlist");
         final Intent devicecontrol = new Intent(this,DeviceControl.class);
 
-        toast = Toast.makeText(this , "Sent Devlist::", Toast.LENGTH_SHORT);
-        home = new Intent(this, MainActivity.class);
-
-        Log.i("SearchDevices","sending command!!");
-
-        final Thread sendcommand = new Thread(new Runnable() {
+        Thread getdevinfo= new Thread(new Runnable() {
             @Override
             public void run() {
-                response[0] =sendCommand(getString(R.string.DEVLISTCOMMAND));
-                if(response[0]!=null)
+
+                String devlist=basicSendCommand("DEVLIST");
+
+                Log.i("SearchDevices","Received response for devlist is "+devlist);
+                devicecontrol.putExtra("devlist", devlist);
+
+                String allbatt = basicSendCommand("ALLBATT");
+
+                Log.i("SearchDevices","Received response for allbatt is "+devlist);
+                devicecontrol.putExtra("allbatt", allbatt);
+                startActivity(devicecontrol);
+            }
+        });
+        getdevinfo.start();
+    }
+
+    public  String basicSendCommand(final String command)
+    {
+        final String[] response = new String[1];
+        response[0]=null;
+
+        final PrintWriter finalClientout = MainActivity.clientout;
+
+        Thread sender = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(client!=null)
                 {
-                    Log.i("SearchDevices","Received response is "+response[0]);
-                    devicecontrol.putExtra("response", response[0]);
-                    startActivity(devicecontrol);
+                    try {
+                        finalClientout.println(command);
+                        Log.i("Socket","Sent command::" + command);
+                        response[0] = MainActivity.clientin.readLine();
+                        if(response[0]==null)
+                        {
+                            Log.e("error", "run: connection closed by server!!!");
+                            response[0]="n/a";
+                            returnHome();
+                        }
+                        else
+                        {
+                            Log.i("response", "run: received response!!!"+ response[0]);
+                        }
+
+                    } catch (IOException e) {
+                        Log.e("Socket","failed to recv/send input");
+                        e.printStackTrace();
+                        returnHome();
+                    }
+
                 }
             }
         });
 
-        sendcommand.start();
+        sender.start();
+        try {
+            sender.join();
+            Log.i("info", "basicSendCommand: joined!!!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Log.e("thread error::", "basicSendCommand: ");
+        }
 
+        return(response[0]);
     }
+
 }

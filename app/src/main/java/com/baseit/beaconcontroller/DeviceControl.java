@@ -1,6 +1,8 @@
 package com.baseit.beaconcontroller;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,6 +19,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.HashMap;
@@ -30,23 +33,24 @@ import static com.baseit.beaconcontroller.MainActivity.startIO;
 public class DeviceControl extends AppCompatActivity {
 
     Spinner spinner = null;
-    String hedgehog= "0";
-    Map<String,Integer> devnstates = null;
+    static String hedgehog= "0";
+    Map<String, Float> devnstates = null;
+    Map<String,Float> devnbatt = null;
     Toast actiontoast = null;
     TextView batterystatus =null;
-    String selectedbeacon = null;
+    static String selectedbeacon = null;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            client.close();
-            Log.i("socket", "onDestroy: Closed correctly!!");
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
+//        try {
+//            client.close();
+//            Log.i("socket", "onDestroy: Closed correctly!!");
+//        } catch (IOException e) {
+//
+//            e.printStackTrace();
+//
+//        }
     }
 
     @Override
@@ -57,12 +61,17 @@ public class DeviceControl extends AppCompatActivity {
 
 
         Intent searchdevices = getIntent();
+        String devlist_res=searchdevices.getStringExtra("devlist").trim();
+        String allbatt_res=searchdevices.getStringExtra("allbatt").trim();
+
+        Log.i("response", "onCreate: "+devlist_res);
+        Log.i("response", "onCreate: "+allbatt_res);
 
         actiontoast = Toast.makeText(this,"dummy",Toast.LENGTH_SHORT);
 
-        if(searchdevices.getStringExtra("response").trim().matches(getString(R.string.DEVLISTPATTERN)))
+        if(devlist_res.matches(getString(R.string.DEVLISTPATTERN)))
         {
-            setupSpinner(searchdevices.getStringExtra("response").trim());
+            setupSpinner(devlist_res,allbatt_res);
         }
         else
         {
@@ -78,57 +87,65 @@ public class DeviceControl extends AppCompatActivity {
 
     }
 
-
-    public  void setupSpinner(String devpack)
+    public Map<String,Float> packToDict(String pack)
     {
-        spinner = (Spinner) findViewById(R.id.beaconslist);
-        String[] responseraw = devpack.split(",");
-        final String[] devlist = new String[responseraw.length-1];
+        String[] packraw = pack.split(",");
 
-        devnstates = new HashMap<String, Integer>();
+        Map<String,Float> packdict = new HashMap<String, Float>();
 
-        for(String res:responseraw)
+        for(String res:packraw)
         {
             if(res.split("-")[0].equals("HED"))
             {
                 hedgehog=res.split("-")[1];
             }
-            else {
-                devnstates.put(res.split("-")[0], Integer.valueOf(res.split("-")[1]));
-            }
+            else
+                {
+                    try{
+
+                        packdict.put(res.split("-")[0], Float.parseFloat(res.split("-")[1]));
+                    }
+                    catch(NumberFormatException e)
+                    {
+                        packdict.put(res.split("-")[0], (float) -12.0);
+                    }
+                }
         }
 
-        devnstates.keySet().toArray(devlist);
+        return(packdict);
+    }
 
-        ArrayAdapter<String> ad = new ArrayAdapter<String>(this,R.layout.spinner_item,devlist);
-        ad.setDropDownViewResource(R.layout.spinner_item);
-        spinner.setAdapter(ad);
+    public  void setupSpinner(String devpack,String battpack)
+    {
+        Log.i("response", "onCreate: "+devpack);
+        Log.i("response", "onCreate: "+battpack);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                onSelectedBeacon(devlist[i]);
-            }
+        RecyclerView beaconlist = (RecyclerView) findViewById(R.id.beaconview);
 
+        devnstates = packToDict(devpack);
+        devnbatt = packToDict(battpack);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        LinearLayoutManager beaconlay = new LinearLayoutManager(this);
 
-            }
-        });
+        beaconlist.setLayoutManager(beaconlay);
+
+        BeaconInfo beaconadap = new BeaconInfo(this,devnstates,devnbatt);
+
+        beaconlist.setAdapter(beaconadap);
 
     }
 
     private void updateSpinner()
     {
-        String response = basicSendCommand(getString(R.string.DEVLISTCOMMAND));
+        String devlist_res = basicSendCommand(getString(R.string.DEVLISTCOMMAND));
+        String allbat_res = basicSendCommand("ALLBATT");
 
-        if(response.trim().matches(getString(R.string.DEVLISTPATTERN)))
+        if(devlist_res.trim().matches(getString(R.string.DEVLISTPATTERN)))
         {
             Log.i("info", "updateSpinner: Got valid packet");
-            setupSpinner(response);
-//            actiontoast.setText("Updated Device List");
-//            actiontoast.show();
+            setupSpinner(devlist_res,allbat_res);
+            actiontoast.setText("Updated Device List");
+            actiontoast.show();
         }
         else
         {
@@ -137,38 +154,18 @@ public class DeviceControl extends AppCompatActivity {
 
 
     }
-    public  void onSelectedBeacon(String beacon)
-    {
-        TextView devicestate = (TextView) findViewById(R.id.beaconstate);
-        TextView beaconaddress = (TextView) findViewById(R.id.hedgehog);
-        batterystatus = (TextView) findViewById(R.id.battery);
-
-        beaconaddress.setText(hedgehog);
-
-        selectedbeacon = beacon;
-
-        batterystatus.setText(getBatteryStatus());
-
-        if(devnstates.get(beacon)>0)
-        {
-            devicestate.setText("Dead");
-            devicestate.setTextColor(getResources().getColor(R.color.failure));
-
-        }
-        else
-        {
-            devicestate.setText("Alive");
-            devicestate.setTextColor(getResources().getColor(R.color.success));
-        }
-
-    }
 
     public void returnHome()
     {
         SearchDevices.home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        try {
+//            client.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Toast.makeText(this,"Connection lost!!",Toast.LENGTH_SHORT).show();
         startActivity(SearchDevices.home);
-        SearchDevices.toast.setText("Connection Lost!!");
-        SearchDevices.toast.show();
+
     }
 
 
@@ -233,8 +230,6 @@ public class DeviceControl extends AppCompatActivity {
         response=basicSendCommand(getString(R.string.STATUSCOMMAND)+selectedbeacon);
 
         responsels=response.split(",");
-
-
 
         if(response==null)
         {
