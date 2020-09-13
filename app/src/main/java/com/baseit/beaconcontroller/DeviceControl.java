@@ -67,7 +67,7 @@ public class DeviceControl extends AppCompatActivity {
         Log.i("response", "onCreate: "+devlist_res);
         Log.i("response", "onCreate: "+allbatt_res);
 
-        actiontoast = Toast.makeText(this,"dummy",Toast.LENGTH_SHORT);
+        actiontoast = Toast.makeText(getBaseContext(),"dummy",Toast.LENGTH_SHORT);
 
         if(devlist_res.matches(getString(R.string.DEVLISTPATTERN)))
         {
@@ -144,8 +144,8 @@ public class DeviceControl extends AppCompatActivity {
         {
             Log.i("info", "updateSpinner: Got valid packet");
             setupSpinner(devlist_res,allbat_res);
-            actiontoast.setText("Updated Device List");
-            actiontoast.show();
+//            actiontoast.setText("Updated Device List");
+//            actiontoast.show();
         }
         else
         {
@@ -272,15 +272,18 @@ public class DeviceControl extends AppCompatActivity {
         if(response.matches("true|false"))
         {
             if (Boolean.parseBoolean(response)) {
+
                 actiontoast.setText("Woke Up " + selectedbeacon);
+                Log.i("info", "onClickWake: done waking up");
 
             } else {
+
                 actiontoast.setText("Failed To Wake Up " + selectedbeacon);
-
+                Log.i("info", "onClickWake: failed waking up");
             }
-
-            updateSpinner();
             actiontoast.show();
+            updateSpinner();
+
 
         }
         else
@@ -302,9 +305,9 @@ public class DeviceControl extends AppCompatActivity {
                 actiontoast.setText("Failed to put asleep " + selectedbeacon);
 
             }
-
-            updateSpinner();
             actiontoast.show();
+            updateSpinner();
+
 
         }
         else
@@ -328,9 +331,9 @@ public class DeviceControl extends AppCompatActivity {
                 actiontoast.setText("Failed to send reset for " + selectedbeacon);
 
             }
-
-            updateSpinner();
             actiontoast.show();
+            updateSpinner();
+
 
         }
         else

@@ -13,8 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DeviceControl"></activity>
-        <activity android:name=".SearchDevices" />
+        <activity android:name=".DeviceControl" android:theme="@style/NoActionBar"></activity>
+        <activity android:name=".SearchDevices" android:theme="@style/NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

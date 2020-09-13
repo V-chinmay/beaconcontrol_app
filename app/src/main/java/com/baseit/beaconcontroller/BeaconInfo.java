@@ -49,7 +49,7 @@ public class BeaconInfo extends RecyclerView.Adapter<BeaconInfo.BeaconViewHolder
     @Override
     public void onBindViewHolder(@NonNull BeaconViewHolder holder, final int position) {
 
-        if(beaconnstates.get(beaconadds[position])>0)
+        if(beaconnstates.get(beaconadds[position])==0 && !(beaconnbattery.get(beaconadds[position])<0))
         {
             holder.beaconstatus.setText("Alive");
             holder.beaconstatus.setTextColor(context.getResources().getColor(R.color.success));
@@ -81,7 +81,7 @@ public class BeaconInfo extends RecyclerView.Adapter<BeaconInfo.BeaconViewHolder
 
         if(beaconadds[position].equals(hedgehog))
         {
-            holder.ishedgehog.setText("Hedghog");
+            holder.ishedgehog.setText("Hedgehog");
             holder.ishedgehog.setTextColor(context.getResources().getColor(R.color.success));
         }
 
